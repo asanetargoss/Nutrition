@@ -19,7 +19,7 @@ public class Nutrition {
 	public static final String MODNAME = "Nutrition";
 
 	// Create instance of mod
-	@Mod.Instance
+	@Mod.Instance(MODID)
 	public static Nutrition instance;
 
 	// Create instance of proxy
