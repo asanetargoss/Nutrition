@@ -19,7 +19,7 @@ public class Nutrition {
 	public static final String FORGE_VERSIONS = "[1.12,1.13)";
 
 	// Create instance of mod
-	@Mod.Instance
+	@Mod.Instance(MODID)
 	public static Nutrition instance;
 
 	// Create instance of proxy
