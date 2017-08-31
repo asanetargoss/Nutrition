@@ -1,5 +1,6 @@
 package ca.wescook.nutrition.effects;
 
+import ca.wescook.nutrition.capabilities.CapInterface;
 import ca.wescook.nutrition.capabilities.CapProvider;
 import ca.wescook.nutrition.nutrients.Nutrient;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +23,9 @@ public class EffectsManager {
 	// Returns which effects match threshold conditions
 	private static List<Effect> getEffectsInThreshold(EntityPlayer player) {
 		// Get info
-		Map<Nutrient, Float> playerNutrition = player.getCapability(CapProvider.NUTRITION_CAPABILITY, null).get();
+	    CapInterface capability = player.getCapability(CapProvider.NUTRITION_CAPABILITY, null);
+		Map<Nutrient, Float> playerNutrition = capability.get();
+		Map<Nutrient, Boolean> playerNutritionEnabled = capability.getEnabled();
 
 		// Track states
 		List<Effect> effectsInThreshold = new ArrayList<>();
@@ -42,6 +45,7 @@ public class EffectsManager {
 					for (Map.Entry<Nutrient, Float> entry : playerNutrition.entrySet()) {
 						// If any are found within threshold
 						if (!entry.getKey().equals(effect.nutrient) // Skip if excluded
+						        && playerNutritionEnabled.get(entry.getKey())
 								&& entry.getValue() >= effect.minimum && entry.getValue() <= effect.maximum) {
 							effectsInThreshold.add(effect); // Add effect, once
 							break;
@@ -57,12 +61,14 @@ public class EffectsManager {
 
 					// Loop all nutrients
 					for (Map.Entry<Nutrient, Float> entry : playerNutrition.entrySet()) {
-						if (!entry.getKey().equals(effect.nutrient)) // Skip if excluded
+						if (!entry.getKey().equals(effect.nutrient) // Skip if excluded
+						        && playerNutritionEnabled.get(entry.getKey())) {
 							total += entry.getValue(); // Add each value to total
+						}
 					}
 
 					// Remove the excluded nutrient from the size count
-					int size = playerNutrition.size();
+					int size = capability.getEnabledCount();
 					if (effect.nutrient != null)
 						size--;
 
@@ -83,6 +89,7 @@ public class EffectsManager {
 					// Loop all nutrients
 					for (Map.Entry<Nutrient, Float> entry : playerNutrition.entrySet()) {
 						if (!entry.getKey().equals(effect.nutrient) // Skip if excluded
+						        && playerNutritionEnabled.get(entry.getKey())
 								&& !(entry.getValue() >= effect.minimum && entry.getValue() <= effect.maximum)) // If nutrient isn't within threshold
 							allWithinThreshold = false; // Fail check
 					}
@@ -102,6 +109,7 @@ public class EffectsManager {
 					for (Map.Entry<Nutrient, Float> entry : playerNutrition.entrySet()) {
 						// If any are found within threshold
 						if (!entry.getKey().equals(effect.nutrient) // Skip if excluded
+						        && playerNutritionEnabled.get(entry.getKey())
 								&& entry.getValue() >= effect.minimum && entry.getValue() <= effect.maximum)
 							cumulativeCount++;
 					}

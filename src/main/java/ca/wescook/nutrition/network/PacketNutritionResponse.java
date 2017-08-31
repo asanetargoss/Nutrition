@@ -1,5 +1,6 @@
 package ca.wescook.nutrition.network;
 
+import ca.wescook.nutrition.capabilities.CapInterface;
 import ca.wescook.nutrition.capabilities.CapProvider;
 import ca.wescook.nutrition.gui.ModGuiHandler;
 import ca.wescook.nutrition.nutrients.Nutrient;
@@ -26,6 +27,7 @@ public class PacketNutritionResponse {
 
 		// Client vars only
 		Map<Nutrient, Float> clientNutrients;
+		Map<Nutrient, Boolean> clientNutrientsEnabled;
 
 		public Message() {}
 
@@ -38,10 +40,13 @@ public class PacketNutritionResponse {
 		@Override
 		public void toBytes(ByteBuf buf) {
 			// Loop through nutrients from server player, and add to buffer
-			Map<Nutrient, Float> nutrientData = serverPlayer.getCapability(CapProvider.NUTRITION_CAPABILITY, null).get();
+		    CapInterface capability = serverPlayer.getCapability(CapProvider.NUTRITION_CAPABILITY, null);
+			Map<Nutrient, Float> nutrientData = capability.get();
+			Map<Nutrient, Boolean> nutrientDataEnabled = capability.getEnabled();
 			for (Map.Entry<Nutrient, Float> entry : nutrientData.entrySet()) {
 				ByteBufUtils.writeUTF8String(buf, entry.getKey().name); // Write name as identifier
 				buf.writeFloat(entry.getValue()); // Write float as value
+				buf.writeBoolean(nutrientDataEnabled.get(entry.getKey())); // Write boolean as value
 			}
 		}
 
@@ -50,10 +55,13 @@ public class PacketNutritionResponse {
 		public void fromBytes(ByteBuf buf) {
 			// Loop through buffer stream to build nutrition data
 			clientNutrients = new HashMap<>();
+			clientNutrientsEnabled = new HashMap<>();
 			while(buf.isReadable()) {
 				String identifier = ByteBufUtils.readUTF8String(buf);
 				Float value = buf.readFloat();
+				Boolean enabled = buf.readBoolean();
 				clientNutrients.put(NutrientList.getByName(identifier), value);
+				clientNutrientsEnabled.put(NutrientList.getByName(identifier), enabled);
 			}
 		}
 	}
@@ -66,6 +74,7 @@ public class PacketNutritionResponse {
 			FMLCommonHandler.instance().getWorldThread(context.netHandler).addScheduledTask(() -> {
 				// Update local dummy nutrition data
 				ClientProxy.nutrientData = message.clientNutrients;
+				ClientProxy.nutrientDataEnabled = message.clientNutrientsEnabled;
 
 				// If GUI is still open, update GUI
 				GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;

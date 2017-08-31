@@ -1,5 +1,6 @@
 package ca.wescook.nutrition.events;
 
+import ca.wescook.nutrition.capabilities.CapInterface;
 import ca.wescook.nutrition.capabilities.CapProvider;
 import ca.wescook.nutrition.effects.EffectsManager;
 import ca.wescook.nutrition.nutrients.NutrientList;
@@ -43,8 +44,12 @@ public class EventPlayerUpdate {
 		// If food level has reduced, also lower nutrition
 		if (foodLevelOld != null && foodLevelNew < foodLevelOld) {
 			int difference = foodLevelOld - foodLevelNew;
+			CapInterface capability = player.getCapability(CapProvider.NUTRITION_CAPABILITY, null);
 			float decay = (float) (difference * 0.075 * Config.decayMultiplier); // Lower number for reasonable starting point, then apply multiplier from config
-			player.getCapability(CapProvider.NUTRITION_CAPABILITY, null).subtract(NutrientList.get(), decay, true); // Subtract from every nutrient
+			if (capability.getEnabledCount() != 0) {
+			    decay *= capability.getNutrientCount() / capability.getEnabledCount(); // When some nutrients are disabled, make the others decay faster to maintain difficulty level
+			}
+			capability.subtract(NutrientList.get(), decay, true); // Subtract from every nutrient
 		}
 
 		// Update for the next pass
