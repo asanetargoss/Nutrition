@@ -9,15 +9,37 @@ import java.util.Map;
 public interface CapInterface {
 	// Return all nutrients
 	Map<Nutrient, Float> get();
+	
+	/* Return enabled state for all nutrients (true by default). Only nutrients whose state is enabled can be modified.
+	 * Unlike the "enabled" config option, which sets whether a nutrient is loaded at all, this enabled state
+	 * determines whether or not an individual player relies on a nutrient. This allows for players to have
+	 * different dietary roles. It is up to third-party plugins to disable nutrients.
+	 */
+    Map<Nutrient, Boolean> getEnabled();
 
 	// Return specific nutrient
 	Float get(Nutrient nutrient);
+	
+	// Return specific nutrient enabled state
+    Boolean getEnabled(Nutrient nutrient);
+    
+    // Get how many nutrients the player has total, regardless of their enabled state
+    int getNutrientCount();
+    
+    // Get how many nutrients are in the enabled state for this player
+    int getEnabledCount();
 
 	// Overwrite all nutrients
 	void set(Map<Nutrient, Float> nutrientData, boolean sync);
 
 	// Overwrite specific nutrient
 	void set(Nutrient nutrient, Float value, boolean sync);
+	
+	// Overwrite all nutrient enabled states
+    void setEnabled(Map<Nutrient, Boolean> nutrientEnabledData, boolean sync);
+
+    // Overwrite specific nutrient enabled state
+    void setEnabled(Nutrient nutrient, Boolean enabled, boolean sync);
 
 	// Increase nutrition of specific nutrient
 	void add(Nutrient nutrient, float amount, boolean sync);

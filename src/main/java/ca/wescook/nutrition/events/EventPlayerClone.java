@@ -19,6 +19,7 @@ public class EventPlayerClone {
 		CapInterface nutritionOld = event.getOriginal().getCapability(CapProvider.NUTRITION_CAPABILITY, null); // Get old nutrition
 		CapInterface nutritionNew = player.getCapability(CapProvider.NUTRITION_CAPABILITY, null); // Get new nutrition
 		nutritionNew.set(nutritionOld.get(), true); // Overwrite nutrition
+		nutritionNew.setEnabled(nutritionOld.getEnabled(), true); // Overwrite nutrition enabled state
 
 		// On death, apply nutrition penalty
 		if (event.isWasDeath())

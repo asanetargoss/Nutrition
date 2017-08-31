@@ -1,5 +1,6 @@
 package ca.wescook.nutrition.effects;
 
+import ca.wescook.nutrition.capabilities.CapInterface;
 import ca.wescook.nutrition.capabilities.CapProvider;
 import ca.wescook.nutrition.nutrients.Nutrient;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +23,9 @@ public class EffectsManager {
 	// Returns which effects match threshold conditions
 	private static List<Effect> getEffectsInThreshold(EntityPlayer player) {
 		// Get info
-		Map<Nutrient, Float> playerNutrition = player.getCapability(CapProvider.NUTRITION_CAPABILITY, null).get();
+		CapInterface capability = player.getCapability(CapProvider.NUTRITION_CAPABILITY, null);
+		Map<Nutrient, Float> playerNutrition = capability.get();
+		Map<Nutrient, Boolean> playerNutritionEnabled = capability.getEnabled();
 
 		// Effects being turned on
 		List<Effect> effectsInThreshold = new ArrayList<>();
@@ -37,7 +40,9 @@ public class EffectsManager {
 					// Loop relevant nutrients
 					for (Nutrient nutrient : effect.nutrients) {
 						// If any are found within threshold
-						if (playerNutrition.get(nutrient) >= effect.minimum && playerNutrition.get(nutrient) <= effect.maximum) {
+						if (playerNutritionEnabled.get(nutrient)
+								&& playerNutrition.get(nutrient) >= effect.minimum &&
+								playerNutrition.get(nutrient) <= effect.maximum) {
 							effectsInThreshold.add(effect); // Add effect, once
 							break;
 						}
@@ -49,14 +54,18 @@ public class EffectsManager {
 				case "average": {
 					// Reset counter each new loop
 					Float total = 0f;
+					int size = 0;
 					Float average;
 
 					// Loop relevant nutrients
-					for (Nutrient nutrient : effect.nutrients)
-						total += playerNutrition.get(nutrient); // Add each value to total
+					for (Nutrient nutrient : effect.nutrients) {
+						if (playerNutritionEnabled.get(nutrient)) {
+							total += playerNutrition.get(nutrient); // Add each value to total
+							size++;
+						}
+					}
 
 					// Divide by number of nutrients for average (division by zero check)
-					int size = playerNutrition.size();
 					average = (size != 0) ? total / size : -1f;
 
 					// Check average is inside the threshold
@@ -72,7 +81,9 @@ public class EffectsManager {
 
 					// Loop relevant nutrients
 					for (Nutrient nutrient : effect.nutrients) {
-						if (!(playerNutrition.get(nutrient) >= effect.minimum && playerNutrition.get(nutrient) <= effect.maximum)) // If nutrient isn't within threshold
+						if (!playerNutritionEnabled.get(nutrient) ||
+								!(playerNutrition.get(nutrient) >= effect.minimum &&
+								playerNutrition.get(nutrient) <= effect.maximum)) // If nutrient isn't within threshold
 							allWithinThreshold = false; // Fail check
 					}
 
@@ -90,7 +101,9 @@ public class EffectsManager {
 					// Loop relevant nutrients
 					for (Nutrient nutrient : effect.nutrients) {
 						// For each nutrient found within threshold
-						if (playerNutrition.get(nutrient) >= effect.minimum && playerNutrition.get(nutrient) <= effect.maximum)
+						if (playerNutritionEnabled.get(nutrient) &&
+								playerNutrition.get(nutrient) >= effect.minimum &&
+								playerNutrition.get(nutrient) <= effect.maximum)
 							cumulativeCount++;
 					}
 

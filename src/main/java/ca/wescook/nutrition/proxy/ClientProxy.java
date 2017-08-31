@@ -15,6 +15,7 @@ import java.util.Map;
 public class ClientProxy extends CommonProxy {
 	public static KeyBinding keyNutritionGui;
 	public static Map<Nutrient, Float> nutrientData; // Holds local copy of nutrition data, which resyncs routinely
+	public static Map<Nutrient, Boolean> nutrientDataEnabled; // Holds which nutrients are enabled for this player, resynced like above
 
 	@Override
 	public void init(FMLInitializationEvent event) {
@@ -29,5 +30,13 @@ public class ClientProxy extends CommonProxy {
 
 		if (Config.enableTooltips)
 			MinecraftForge.EVENT_BUS.register(new EventTooltip()); // Register tooltip event
+	}
+	
+	public static int nutrientsEnabledCount() {
+	    int nutrientsEnabled = 0;
+	    for (boolean enabled : nutrientDataEnabled.values()) {
+	        if (enabled) nutrientsEnabled++;
+	    }
+	    return nutrientsEnabled;
 	}
 }

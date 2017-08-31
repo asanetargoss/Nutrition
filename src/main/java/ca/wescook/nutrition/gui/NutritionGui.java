@@ -60,32 +60,34 @@ public class NutritionGui extends GuiScreenDynamic {
 	private void drawNutritionBars() {
 		int i = 0;
 		for (Nutrient nutrient : NutrientList.get()) {
-			// Calculate percentage width for nutrition bars
-			float currentNutrient = (ClientProxy.nutrientData != null && ClientProxy.nutrientData.get(nutrient) != null) ? Math.round(ClientProxy.nutrientData.get(nutrient)) : 0; // If null, setPlayerNutrition to 0, else getPlayerNutrition true value
-			int nutritionBarDisplayWidth = (int) (currentNutrient / 100 * NUTRITION_BAR_WIDTH);
+		    if (ClientProxy.nutrientDataEnabled != null && ClientProxy.nutrientDataEnabled.get(nutrient)) {
+		    	// Calculate percentage width for nutrition bars
+				float currentNutrient = (ClientProxy.nutrientData != null && ClientProxy.nutrientData.get(nutrient) != null) ? Math.round(ClientProxy.nutrientData.get(nutrient)) : 0; // If null, setPlayerNutrition to 0, else getPlayerNutrition true value
+				int nutritionBarDisplayWidth = (int) (currentNutrient / 100 * NUTRITION_BAR_WIDTH);
 
-			// Draw icons
-			itemRender.renderItemIntoGUI(nutrient.icon, left + NUTRITION_ICON_HORIZONTAL_OFFSET, top + NUTRITION_ICON_VERTICAL_OFFSET + (i * NUTRITION_DISTANCE));
+				// Draw icons
+				itemRender.renderItemIntoGUI(nutrient.icon, left + NUTRITION_ICON_HORIZONTAL_OFFSET, top + NUTRITION_ICON_VERTICAL_OFFSET + (i * NUTRITION_DISTANCE));
 
-			// Draw black background
-			drawRect(
-					left + NUTRITION_BAR_HORIZONTAL_OFFSET + labelCharacterPadding - 1,
-					top + NUTRITION_BAR_VERTICAL_OFFSET + (i * NUTRITION_DISTANCE) - 1,
-					left + NUTRITION_BAR_HORIZONTAL_OFFSET + NUTRITION_BAR_WIDTH + labelCharacterPadding + 1,
-					top + NUTRITION_BAR_VERTICAL_OFFSET + (i * NUTRITION_DISTANCE) + NUTRITION_BAR_HEIGHT + 1,
-					0xff000000
-			);
+				// Draw black background
+				drawRect(
+						left + NUTRITION_BAR_HORIZONTAL_OFFSET + labelCharacterPadding - 1,
+						top + NUTRITION_BAR_VERTICAL_OFFSET + (i * NUTRITION_DISTANCE) - 1,
+						left + NUTRITION_BAR_HORIZONTAL_OFFSET + NUTRITION_BAR_WIDTH + labelCharacterPadding + 1,
+						top + NUTRITION_BAR_VERTICAL_OFFSET + (i * NUTRITION_DISTANCE) + NUTRITION_BAR_HEIGHT + 1,
+						0xff000000
+				);
 
-			// Draw colored bar
-			drawRect(
-					left + NUTRITION_BAR_HORIZONTAL_OFFSET + labelCharacterPadding,
-					top + NUTRITION_BAR_VERTICAL_OFFSET + (i * NUTRITION_DISTANCE),
-					left + NUTRITION_BAR_HORIZONTAL_OFFSET + nutritionBarDisplayWidth + labelCharacterPadding,
-					top + NUTRITION_BAR_VERTICAL_OFFSET + (i * NUTRITION_DISTANCE) + NUTRITION_BAR_HEIGHT,
-					nutrient.color
-			);
+				// Draw colored bar
+				drawRect(
+						left + NUTRITION_BAR_HORIZONTAL_OFFSET + labelCharacterPadding,
+						top + NUTRITION_BAR_VERTICAL_OFFSET + (i * NUTRITION_DISTANCE),
+						left + NUTRITION_BAR_HORIZONTAL_OFFSET + nutritionBarDisplayWidth + labelCharacterPadding,
+						top + NUTRITION_BAR_VERTICAL_OFFSET + (i * NUTRITION_DISTANCE) + NUTRITION_BAR_HEIGHT,
+						nutrient.color
+				);
 
-			i++;
+				i++;
+    		}
 		}
 	}
 
@@ -104,7 +106,7 @@ public class NutritionGui extends GuiScreenDynamic {
 		}
 
 		// Update dynamic GUI size
-		super.updateContainerSize(GUI_BASE_WIDTH + labelCharacterPadding, GUI_BASE_HEIGHT + (NutrientList.get().size() * NUTRITION_DISTANCE));
+		super.updateContainerSize(GUI_BASE_WIDTH + labelCharacterPadding, GUI_BASE_HEIGHT + (ClientProxy.nutrientsEnabledCount() * NUTRITION_DISTANCE));
 
 		// Add Close button
 		buttonList.add(buttonClose = new GuiButton(
@@ -133,17 +135,19 @@ public class NutritionGui extends GuiScreenDynamic {
 		// Nutrients names and values
 		int i = 0;
 		for (Nutrient nutrient : NutrientList.get()) {
-			// Create labels for each nutrient type name
-			labelList.add(label = new GuiLabel(fontRenderer, 0, left + LABEL_NAME_HORIZONTAL_OFFSET, top + LABEL_VERTICAL_OFFSET + (i * NUTRITION_DISTANCE), 0, 0, 0xffffffff));
-			label.addLine(I18n.format("nutrient." + Nutrition.MODID + ":" + nutrient.name)); // Add name from localization file
-
-			// Create percent value labels for each nutrient value
-			labelList.add(label = new GuiLabel(fontRenderer, 0, left + LABEL_VALUE_HORIZONTAL_OFFSET + labelCharacterPadding, top + LABEL_VERTICAL_OFFSET + (i * NUTRITION_DISTANCE), 0, 0, 0xffffffff));
-			if (ClientProxy.nutrientData != null && ClientProxy.nutrientData.get(nutrient) != null) // Ensure local nutrition data exists
-				label.addLine(Math.round(ClientProxy.nutrientData.get(nutrient)) + "%%");
-			else
-				label.addLine(I18n.format("gui." + Nutrition.MODID + ":updating"));
-			i++;
+			if (ClientProxy.nutrientDataEnabled != null && ClientProxy.nutrientDataEnabled.get(nutrient)) {
+				// Create labels for each nutrient type name
+				labelList.add(label = new GuiLabel(fontRenderer, 0, left + LABEL_NAME_HORIZONTAL_OFFSET, top + LABEL_VERTICAL_OFFSET + (i * NUTRITION_DISTANCE), 0, 0, 0xffffffff));
+				label.addLine(I18n.format("nutrient." + Nutrition.MODID + ":" + nutrient.name)); // Add name from localization file
+	
+				// Create percent value labels for each nutrient value
+				labelList.add(label = new GuiLabel(fontRenderer, 0, left + LABEL_VALUE_HORIZONTAL_OFFSET + labelCharacterPadding, top + LABEL_VERTICAL_OFFSET + (i * NUTRITION_DISTANCE), 0, 0, 0xffffffff));
+				if (ClientProxy.nutrientData != null && ClientProxy.nutrientData.get(nutrient) != null) // Ensure local nutrition data exists
+					label.addLine(Math.round(ClientProxy.nutrientData.get(nutrient)) + "%%");
+				else
+					label.addLine(I18n.format("gui." + Nutrition.MODID + ":updating"));
+				i++;
+			}
 		}
 	}
 
