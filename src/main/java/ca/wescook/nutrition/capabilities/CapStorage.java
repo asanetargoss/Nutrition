@@ -22,7 +22,7 @@ public class CapStorage implements Capability.IStorage<CapInterface> {
 		NBTTagCompound morePlayerData = new NBTTagCompound();
         playerData.setTag(MORE_DATA, morePlayerData);
         NBTTagCompound nutrientEnabled = new NBTTagCompound();
-        playerData.setTag(NUTRIENT_ENABLED, nutrientEnabled);
+        morePlayerData.setTag(NUTRIENT_ENABLED, nutrientEnabled);
         
 		for (Nutrient nutrient : NutrientList.get()) {
 			playerData.setFloat(nutrient.name, instance.get(nutrient));
