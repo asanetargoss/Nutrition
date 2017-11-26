@@ -48,8 +48,10 @@ public class EventPlayerUpdate {
 			CapInterface capability = player.getCapability(CapProvider.NUTRITION_CAPABILITY, null);
 			float baseDecay = (float) (difference * 0.075 * Config.decayMultiplier); // Lower number for reasonable starting point, then apply multiplier from config
 			for (Nutrient nutrient : NutrientList.get()) {
-			    // Subtract from every nutrient, with rate multiplied by per-player decay multiplier
-			    capability.subtract(nutrient, baseDecay*(capability.getDecay(nutrient)), false);
+			    if (capability.getEnabled(nutrient)) {
+    			    // Subtract from every nutrient, with rate multiplied by per-player decay multiplier
+    			    capability.subtract(nutrient, baseDecay*(capability.getDecay(nutrient)), false);
+			    }
 			}
 			capability.resync();
 		}
