@@ -19,6 +19,8 @@ public class CapImplementation implements CapInterface {
 	private Map<Nutrient, Float> playerNutrition = new HashMap<>();
 	// Map Nutrient type to whether that nutrient is enabled for that player (true by default)
 	private Map<Nutrient, Boolean> playerNutritionEnabled = new HashMap<>();
+	// Nutrient decay rate multiplier per player (1.0 by default)
+    private Map<Nutrient, Float> playerNutritionDecay = new HashMap<>();
 	private EntityPlayer player;
 
 	CapImplementation(EntityPlayer player) {
@@ -29,6 +31,7 @@ public class CapImplementation implements CapInterface {
 		for (Nutrient nutrient : NutrientList.get()) {
 			playerNutrition.put(nutrient, (float) Config.startingNutrition);
 		    playerNutritionEnabled.put(nutrient, true);
+		    playerNutritionDecay.put(nutrient, 1.0F);
 		}
 	}
 
@@ -46,6 +49,14 @@ public class CapImplementation implements CapInterface {
 	
 	public Boolean getEnabled(Nutrient nutrient) {
         return playerNutritionEnabled.get(nutrient);
+    }
+	
+	public Map<Nutrient, Float> getDecay() {
+        return playerNutritionDecay;
+    }
+    
+    public Float getDecay(Nutrient nutrient) {
+        return playerNutritionDecay.get(nutrient);
     }
 	
 	public int getNutrientCount() {
@@ -86,6 +97,17 @@ public class CapImplementation implements CapInterface {
     public void setEnabled(Map<Nutrient, Boolean> nutrientEnabledData, boolean sync) {
         for (Map.Entry<Nutrient, Boolean> entry : nutrientEnabledData.entrySet())
             this.playerNutritionEnabled.put(entry.getKey(), entry.getValue());
+        if (sync) resync();
+    }
+    
+    public void setDecay(Nutrient nutrient, Float nutrientDecay, boolean sync) {
+        playerNutritionDecay.put(nutrient, nutrientDecay);
+        if (sync) resync();
+    }
+
+    public void setDecay(Map<Nutrient, Float> nutrientDecayData, boolean sync) {
+        for (Map.Entry<Nutrient, Float> entry : nutrientDecayData.entrySet())
+            this.playerNutritionDecay.put(entry.getKey(), entry.getValue());
         if (sync) resync();
     }
 

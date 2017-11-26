@@ -18,8 +18,10 @@ public class EventPlayerClone {
 		// Duplicate player nutrition on warp/death
 		CapInterface nutritionOld = event.getOriginal().getCapability(CapProvider.NUTRITION_CAPABILITY, null); // Get old nutrition
 		CapInterface nutritionNew = player.getCapability(CapProvider.NUTRITION_CAPABILITY, null); // Get new nutrition
-		nutritionNew.set(nutritionOld.get(), true); // Overwrite nutrition
-		nutritionNew.setEnabled(nutritionOld.getEnabled(), true); // Overwrite nutrition enabled state
+		nutritionNew.set(nutritionOld.get(), false); // Overwrite nutrition
+		nutritionNew.setEnabled(nutritionOld.getEnabled(), false); // Overwrite nutrition enabled state
+		nutritionNew.setDecay(nutritionOld.getDecay(), false); // Overwrite nutrition decay rate multiplier
+		nutritionNew.resync();
 
 		// On death, apply nutrition penalty
 		if (event.isWasDeath())

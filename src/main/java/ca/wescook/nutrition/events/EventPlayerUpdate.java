@@ -49,11 +49,12 @@ public class EventPlayerUpdate {
 			Map<Nutrient, Float> playerNutrition = capability.get();
 
 			for (Map.Entry<Nutrient, Float> entry : playerNutrition.entrySet()) {
-				float decay = (float) (difference * 0.075 * entry.getKey().decay); // Lower number for reasonable starting point, then apply multiplier from config
-				if (capability.getEnabledCount() != 0) {
-					decay *= capability.getNutrientCount() / capability.getEnabledCount(); // When some nutrients are disabled, make the others decay faster to maintain difficulty level
+				Nutrient nutrient = entry.getKey();
+				if (capability.getEnabled(nutrient)) {
+					float decay = difference * 0.075F * nutrient.decay; // Lower number for reasonable starting point, then apply multiplier from config
+					decay *= capability.getDecay(nutrient); // Apply multiplier from player
+					entry.setValue(Floats.constrainToRange(entry.getValue() - decay, 0, 100)); // Subtract decay from nutrient
 				}
-				entry.setValue(Floats.constrainToRange(entry.getValue() - decay, 0, 100)); // Subtract decay from nutrient
 			}
 			capability.set(playerNutrition, true);
 		}

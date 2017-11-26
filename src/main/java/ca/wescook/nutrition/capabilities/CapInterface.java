@@ -16,12 +16,18 @@ public interface CapInterface {
 	 * different dietary roles. It is up to third-party plugins to disable nutrients.
 	 */
     Map<Nutrient, Boolean> getEnabled();
+    
+    // Return all nutrient decay multipliers
+    Map<Nutrient, Float> getDecay();
 
 	// Return specific nutrient
 	Float get(Nutrient nutrient);
 	
 	// Return specific nutrient enabled state
     Boolean getEnabled(Nutrient nutrient);
+    
+    // Return specific nutrient decay multiplier
+    Float getDecay(Nutrient nutrient);
     
     // Get how many nutrients the player has total, regardless of their enabled state
     int getNutrientCount();
@@ -40,6 +46,12 @@ public interface CapInterface {
 
     // Overwrite specific nutrient enabled state
     void setEnabled(Nutrient nutrient, Boolean enabled, boolean sync);
+    
+    // Overwrite all nutrient decay rate multipliers
+    void setDecay(Map<Nutrient, Float> nutrientDecayData, boolean sync);
+
+    // Overwrite specific nutrient enabled state
+    void setDecay(Nutrient nutrient, Float nutrientDecay, boolean sync);
 
 	// Increase nutrition of specific nutrient
 	void add(Nutrient nutrient, float amount, boolean sync);
