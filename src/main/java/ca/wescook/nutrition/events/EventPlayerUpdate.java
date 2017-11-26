@@ -3,6 +3,7 @@ package ca.wescook.nutrition.events;
 import ca.wescook.nutrition.capabilities.CapInterface;
 import ca.wescook.nutrition.capabilities.CapProvider;
 import ca.wescook.nutrition.effects.EffectsManager;
+import ca.wescook.nutrition.nutrients.Nutrient;
 import ca.wescook.nutrition.nutrients.NutrientList;
 import ca.wescook.nutrition.utility.Config;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,11 +46,12 @@ public class EventPlayerUpdate {
 		if (foodLevelOld != null && foodLevelNew < foodLevelOld) {
 			int difference = foodLevelOld - foodLevelNew;
 			CapInterface capability = player.getCapability(CapProvider.NUTRITION_CAPABILITY, null);
-			float decay = (float) (difference * 0.075 * Config.decayMultiplier); // Lower number for reasonable starting point, then apply multiplier from config
-			if (capability.getEnabledCount() != 0) {
-			    decay *= capability.getNutrientCount() / capability.getEnabledCount(); // When some nutrients are disabled, make the others decay faster to maintain difficulty level
+			float baseDecay = (float) (difference * 0.075 * Config.decayMultiplier); // Lower number for reasonable starting point, then apply multiplier from config
+			for (Nutrient nutrient : NutrientList.get()) {
+			    // Subtract from every nutrient, with rate multiplied by per-player decay multiplier
+			    capability.subtract(nutrient, baseDecay*(capability.getDecay(nutrient)), false);
 			}
-			capability.subtract(NutrientList.get(), decay, true); // Subtract from every nutrient
+			capability.resync();
 		}
 
 		// Update for the next pass
