@@ -1,5 +1,6 @@
 package ca.wescook.nutrition.proxy;
 
+import ca.wescook.nutrition.events.EventHud;
 import ca.wescook.nutrition.events.EventNutritionButton;
 import ca.wescook.nutrition.events.EventNutritionKey;
 import ca.wescook.nutrition.events.EventTooltip;
@@ -26,6 +27,7 @@ public class ClientProxy extends CommonProxy {
 			MinecraftForge.EVENT_BUS.register(new EventNutritionKey()); // Register key input event to respond to keybind
 			if (Config.enableGuiButton)
 				MinecraftForge.EVENT_BUS.register(new EventNutritionButton()); // Register GUI button event
+			MinecraftForge.EVENT_BUS.register(new EventHud()); // Register HUD listener to render nutrition overlay
 		}
 
 		if (Config.enableTooltips)
@@ -34,6 +36,9 @@ public class ClientProxy extends CommonProxy {
 	
 	public static int nutrientsEnabledCount() {
 	    int nutrientsEnabled = 0;
+	    if (nutrientDataEnabled == null) {
+	    	return nutrientsEnabled;
+	    }
 	    for (boolean enabled : nutrientDataEnabled.values()) {
 	        if (enabled) nutrientsEnabled++;
 	    }
