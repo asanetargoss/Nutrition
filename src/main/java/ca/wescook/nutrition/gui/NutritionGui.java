@@ -96,10 +96,7 @@ public class NutritionGui extends GuiScreenDynamic {
 		// Nutrition sync request
 		ModPacketHandler.NETWORK_CHANNEL.sendToServer(new PacketNutritionRequest.Message());
 
-		// Update dynamic GUI size
-		super.updateContainerSize(GUI_BASE_WIDTH, GUI_BASE_HEIGHT + (ClientProxy.nutrientsEnabledCount() * NUTRITION_DISTANCE));
-
-		// Add Close button
+		// Add Close button with best guess position
 		buttonList.add(buttonClose = new GuiButton(
 				0,
 				(width / 2) - (CLOSE_BUTTON_WIDTH / 2),
@@ -115,6 +112,13 @@ public class NutritionGui extends GuiScreenDynamic {
 
 	// Called when needing to propagate the window with new information
 	public void redrawLabels() {
+		// Update dynamic GUI size
+		super.updateContainerSize(GUI_BASE_WIDTH, GUI_BASE_HEIGHT + (ClientProxy.nutrientsEnabledCount() * NUTRITION_DISTANCE));
+		
+		// Update button position to the correct one
+		buttonClose.xPosition = (width / 2) - (CLOSE_BUTTON_WIDTH / 2);
+		buttonClose.yPosition = bottom - CLOSE_BUTTON_HEIGHT - CLOSE_BUTTON_OFFSET;
+
 		// Clear existing labels for nutrition value or screen changes
 		labelList.clear();
 
