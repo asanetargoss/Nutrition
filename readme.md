@@ -1,23 +1,18 @@
-# Nutrition
+# Nutrition: Hardcore Alchemy Edition
 
-Nutrition is a highly configurable mod to enable the creation of health systems in Minecraft.
+Nutrition: Hardcore Alchemy Edition is a fork of the 1.10 version of WesCook's Nutrition mod. It was created for the [Hardcore Alchemy Modpack](https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/mod-packs/2900247-hardcore-alchemy-0-4-1-fixing-the-4th-dimension).
 
-See [releases tab for downloads](https://github.com/WesCook/Nutrition/releases), and [Wiki for documentation](https://github.com/WesCook/Nutrition/wiki).
+By default, Nutrition: HcA edition uses Nutrition's five-food group system: grain, vegetable, fruit, protein, and dairy. Nutrients are highly configurable; the mod allows for the creation of arbitrary player stats which are affected by food items.
+
+There is no dedicated wiki for Nutrition: HcA Edition, however [the upstream wiki](https://github.com/WesCook/Nutrition/wiki) is a mostly accurate resource for how to configure the mod.
 
 ![Nutrition GUI](screenshots/gui.png "Nutrition GUI")
 
-Through its [config files](https://github.com/WesCook/Nutrition/wiki/Configuration), Nutrition allows you to define custom food groups (called [nutrients](https://github.com/WesCook/Nutrition/wiki/Nutrients)) which apply [effects](https://github.com/WesCook/Nutrition/wiki/Effects) based on nutrition levels.
+## Food Compatibility
 
-By default, Nutrition comes configured with the classic five food group system: dairy, fruit, grain, protein, and vegetables.  However many different systems are possible.  Some examples include:
+By default, Nutrition: HcA edition includes values for foods from the following mods using the five-food group system:
 
-* A spicy tolerance bar, where eating enough spicy foods will grant a permanent resistance to fire.
-* A zombie simulation where you must constantly eat brains/flesh to avoid negative effects.
-* Gluten intolerance.  Eat bread, get sick.
-
-## Mods Supported
-
-Mods that are supported with the default five-food group system include:
-
+* Vanilla Minecraft
 * [Aether Legacy](https://minecraft.curseforge.com/projects/aether-legacy)
 * [Animalium](https://minecraft.curseforge.com/projects/animalium)
 * [Animania](https://minecraft.curseforge.com/projects/animania)
@@ -37,11 +32,14 @@ Mods that are supported with the default five-food group system include:
 * [Simple Corn](https://minecraft.curseforge.com/projects/simple-corn)
 * [Tinkers Construct](https://minecraft.curseforge.com/projects/tinkers-construct)
 
-Mod support contributions are welcome!  Please create a [Pull Request](https://github.com/WesCook/Nutrition/pulls) or an [Issue](https://github.com/WesCook/Nutrition/issues) with the related .json files.
-
-When updating the mod, please clear your /nutrition/ config directory to receive new mod support (point releases will not require this).
-
 ## Changelog
+
+[v1.6.0.hca.2](https://github.com/asanetargoss/Nutrition/releases/tag/v1.6.0.hca.2) - 2021-02-14
+* Added Nutrition HUD overlay which fades away if nutrition is nearly full
+* Fixed crash which would sometimes occur when opening the Nutrition GUI
+
+[v1.6.0_HcA_v1](https://github.com/asanetargoss/Nutrition/releases/tag/v1.6.0_HcA_v1) - 2018-01-12
+* Added ability to disable nutrients and adjust decay rate in the player nutrition capability
 
 [v1.6.0](https://github.com/WesCook/Nutrition/releases/tag/v1.6.0) - 2017-08-01
 * Added config to prevent nutrition from being reset back up to the minimum upon death
