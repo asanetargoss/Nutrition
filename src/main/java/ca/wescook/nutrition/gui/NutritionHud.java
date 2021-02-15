@@ -138,7 +138,6 @@ public class NutritionHud {
 
         GlStateManager.popMatrix();
         
-        GlStateManager.disableAlpha();
         GlStateManager.disableRescaleNormal();
         GlStateManager.disableLighting();
         GlStateManager.popMatrix();
