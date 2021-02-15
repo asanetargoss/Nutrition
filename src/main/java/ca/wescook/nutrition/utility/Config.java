@@ -36,6 +36,7 @@ public class Config {
 	public static boolean enableGui;
 	public static boolean enableGuiButton;
 	public static boolean enableTooltips;
+	public static boolean enableHud;
 	public static boolean enableLogging;
 
 	// Categories
@@ -87,6 +88,7 @@ public class Config {
 		enableGui = configFile.getBoolean("EnableGui", CATEGORY_GUI, true, "If the nutrition GUI should be enabled");
 		enableGuiButton = configFile.getBoolean("EnableGuiButton", CATEGORY_GUI, true, "If the nutrition button should be shown on player inventory (hotkey will still function).");
 		enableTooltips = configFile.getBoolean("EnableTooltips", CATEGORY_GUI, true, "If foods should show their nutrients on hover.");
+		enableHud = configFile.getBoolean("EnableHud", CATEGORY_GUI, true, "If the nutrition HUD should be shown.");
 
 		enableLogging = configFile.getBoolean("EnableLogging", CATEGORY_LOGGING, false, "Enable logging of missing or invalid foods.");
 

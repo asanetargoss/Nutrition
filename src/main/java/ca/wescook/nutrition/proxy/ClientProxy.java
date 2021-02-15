@@ -27,7 +27,8 @@ public class ClientProxy extends CommonProxy {
 			MinecraftForge.EVENT_BUS.register(new EventNutritionKey()); // Register key input event to respond to keybind
 			if (Config.enableGuiButton)
 				MinecraftForge.EVENT_BUS.register(new EventNutritionButton()); // Register GUI button event
-			MinecraftForge.EVENT_BUS.register(new EventHud()); // Register HUD listener to render nutrition overlay
+			if (Config.enableHud)
+				MinecraftForge.EVENT_BUS.register(new EventHud()); // Register HUD listener to render nutrition overlay
 		}
 
 		if (Config.enableTooltips)
