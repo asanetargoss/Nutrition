@@ -84,7 +84,7 @@ public class NutritionHud {
 		
 		Minecraft mc = Minecraft.getMinecraft();
 		
-		int nutrientAmount = (int)Math.ceil(nutrientAmountFloat);
+		int nutrientAmount = (int)Math.round(nutrientAmountFloat);
 		String nutrientPercentString = Integer.toString(nutrientAmount) + "%";
 		int iconWidth = ITEM_SIZE;
 		FontRenderer fontRenderer = mc.fontRendererObj;
