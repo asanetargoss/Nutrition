@@ -34,6 +34,9 @@ By default, Nutrition: HcA edition includes values for foods from the following 
 
 ## Changelog
 
+[v1.6.0.hca.3](https://github.com/asanetargoss/Nutrition/releases/tag/v1.6.0.hca.3) - 2021-02-27
+* Fixed the numeric value display in the nutrient overlay not matching the nutrient gui
+
 [v1.6.0.hca.2](https://github.com/asanetargoss/Nutrition/releases/tag/v1.6.0.hca.2) - 2021-02-14
 * Added Nutrition HUD overlay which fades away if nutrition is nearly full
 * Fixed crash which would sometimes occur when opening the Nutrition GUI
